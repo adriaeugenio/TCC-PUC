@@ -1,0 +1,88 @@
+﻿/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+                                            Script de Conversão dos Nomes dos Campos Para Stage
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+
+TabelasParaConverter:
+LOAD
+    ENomeTabela
+FROM [$(vExtracaoOriginal)\TabelasParaConverter.qvd](qvd);
+
+LET a = 0;
+
+	    FOR Each vTabela in FieldValueList('ENomeTabela')
+    
+            $(vTabela):
+            LOAD *
+            FROM [$(vExtracaoOriginal)/$(vTabela).qvd](qvd);      
+      
+            $(vTabela)_tmp:
+            LOAD
+                RecNo() As ID_CONVERSAO,
+                1 as tmp_$(i)
+            Resident $(vTabela); 
+        
+            Drop Field tmp_$(i) From $(vTabela)_tmp;
+     
+            FOR i=1 TO NoOfFields('$(vTabela)')
+
+                LET vCampoAntigo = FieldName($(i),'$(vTabela)');
+
+                Campo_Novo_$(i):
+                LOAD
+                    [Nome Tabela Stage],
+                    [Nome dos Campos Stage]
+                FROM [$(vExtracaoBase)/Estudo de Base - Stage.xlsx]
+                (ooxml, embedded labels, table is [Mapa de Dados - Stage])
+                Where [Tabela] = Replace('$(vTabela)','E_','') And [Nome dos Campos] = '$(vCampoAntigo)';
+
+               LET vCampoNovo = PEEK('Nome dos Campos Stage',0,'Campo_Novo_$(i)');
+               LET vNomeTabelaStage = PEEK('Nome Tabela Stage',0,'Campo_Novo_$(i)');
+
+               Drop Table Campo_Novo_$(i);
+                
+                If '$(vCampoAntigo)'  = '$(vCampoNovo)' Then 
+
+                    Left Join($(vTabela)_tmp)
+                    LOAD	
+                        RecNo() As ID_CONVERSAO, 
+                        [$(vCampoAntigo)]
+                    FROM [$(vExtracaoOriginal)/$(vTabela).qvd]
+                    (qvd);
+
+                Else 
+
+                    Left Join($(vTabela)_tmp)
+                    LOAD
+                        RecNo() As ID_CONVERSAO,
+                        [$(vCampoAntigo)] As [$(vCampoNovo)]
+                    FROM [$(vExtracaoOriginal)/$(vTabela).qvd]
+                    (qvd);
+
+                End If            
+
+            NEXT i; 
+        
+            Drop Field ID_CONVERSAO From $(vTabela)_tmp;
+        
+            STORE $(vTabela)_tmp INTO [$(vExtracaoConvertida)/$(vNomeTabelaStage).qvd]  (qvd);
+            Drop Table $(vTabela)_tmp,$(vTabela); 
+
+        NEXT;    
+ 
+//Limpar Qvds Gerados
+TabelasParaConverterLimpar:
+LOAD
+    ENomeTabela As ENomeTabela
+FROM [$(vExtracaoOriginal)\TabelasParaConverter.qvd](qvd);
+
+FOR Each vTabelaLawVision in fieldvaluelist ('ENomeTabela')
+
+    Call EmptyQVD('$(vExtracaoOriginal)\$(vTabelaLawVision).qvd');
+
+    LET a = $(a) + 1;
+        
+NEXT
+
+Drop Table TabelasParaConverter;

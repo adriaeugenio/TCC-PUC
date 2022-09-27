@@ -1,0 +1,26 @@
+﻿
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+									 //Tabelas Geradas Stage
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	E_Tabelas:
+	LOAD * INLINE [
+	PastaOrigem, Arquivo, TipoArquivo
+	Base, CidadesInternacionais, csv
+	Base, PaisesComplemento, xlsx
+	Python/Dados/Aerodromos Internacionais, AerodromosInternacionais, csv
+	Python/Dados/Aerodrómos Privados, AerodromosPrivados, xlsx
+	Python/Dados/Aerodrómos Publicos, AerodromosPublicos, xlsx
+	Python/Dados/Aeronáves, Aeronaves, xlsx
+	Python/Dados/Cidades, Cidades, xlsx
+	Python/Dados/Dados Estatísticos do Transporte Aéreo, DadosEstatisticosTransporteAereo, csv
+	Python/Dados/Empresas Aéreas Estrangeiras Regulares, EmpresasAereasEstrangeirasRegulares, xlsx
+	Python/Dados/Empresas Aéreas Regulares, EmpresasAereasRegulares, xlsx
+	Python/Dados/Estados, Estados, xlsx
+	Python/Dados/Paises, Paises, xlsx
+	Python/Dados/Regiões, Regioes, xlsx
+	Python/Dados/Tarifas Domésticas, TarifasDomesticasGeral, csv
+	Python/Dados/Tarifas Internacionais, TarifasInternacionaisGeral, csv
+	Python/Dados/Voo Regular Ativo (VRA), VRAGeral, csv];

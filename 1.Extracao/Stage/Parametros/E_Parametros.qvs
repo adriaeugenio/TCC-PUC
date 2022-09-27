@@ -1,0 +1,10 @@
+﻿
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+                                                Parametros de Configuração
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+
+LET vExtracaoBase = '$(vPastaRaiz)/1.Extracao/Stage/Base';
+LET vExtracaoOriginal = '$(vPastaRaiz)/1.Extracao/Stage/Qvds Originais';
+LET vExtracaoConvertida = '$(vPastaRaiz)/1.Extracao/Stage/Qvds Convertidos';

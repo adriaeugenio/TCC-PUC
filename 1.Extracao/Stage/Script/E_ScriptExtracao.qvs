@@ -1,0 +1,63 @@
+﻿/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+                                Script de Extração dos Dados Para Stage (Formato: Qvd - Formato Padrão - Qlik)
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+
+LET vDataCarga = Date(Today(1),'DD/MM/YYYY');
+
+$(Include=$(vPastaRaiz)/1.Extracao/Stage/Arquivos Gerais/E_Tabelas.qvs);
+
+LET vQtdTabelas = NoOfRows('E_Tabelas');
+
+TabelasParaConverter:
+LOAD 
+    Null() As ENomeTabela
+AutoGenerate 0;
+
+LET i = 0;
+
+    FOR Each vTabela in FieldValueList('Arquivo')
+
+        LET vTabelaNova = MapSubString('RemoveAcento_Map',PEEK('Arquivo',$(i), 'E_Tabelas'));
+
+        LET vPastaOrigemTabelaNova = PEEK('PastaOrigem',$(i), 'E_Tabelas');
+
+        LET vTipoTabelaNova = PEEK('TipoArquivo',$(i), 'E_Tabelas');
+
+        LET vTabelaTamanho = If(FileSize('$(vPastaRaiz)/1.Extracao/$(vPastaOrigemTabelaNova)/$(vTabela).$(vTipoTabelaNova)') > 0,1,0);
+
+        If $(vTabelaTamanho) = 1 Then
+
+            If '$(vTipoTabelaNova)'  = 'csv' Then 
+
+                $(vTabelaNova):
+                LOAD *
+                FROM [$(vPastaRaiz)/1.Extracao/$(vPastaOrigemTabelaNova)/$(vTabela).$(vTipoTabelaNova)]
+                (txt, utf8, embedded labels, delimiter is ';', msq);  
+
+            Else
+
+                $(vTabelaNova):
+                LOAD *
+                FROM [$(vPastaRaiz)/1.Extracao/$(vPastaOrigemTabelaNova)/$(vTabela).$(vTipoTabelaNova)]
+                (ooxml, embedded labels, table is [Sheet1]);
+
+            End If
+
+            Store $(vTabelaNova) into [$(vExtracaoOriginal)/$(vTabelaNova).qvd] (qvd);
+            Drop Table $(vTabelaNova);  
+
+            Concatenate (TabelasParaConverter)
+            LOAD 
+                '$(vTabelaNova)' As ENomeTabela
+            AutoGenerate 1;
+
+        End If    
+
+        LET i = $(i) + 1;
+
+    NEXT;
+
+Store TabelasParaConverter into [$(vExtracaoOriginal)/TabelasParaConverter.qvd] (qvd);
+Drop Tables TabelasParaConverter, E_Tabelas;

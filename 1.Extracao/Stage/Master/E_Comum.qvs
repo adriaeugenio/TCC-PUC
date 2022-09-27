@@ -1,0 +1,6 @@
+
+//Processados Dados Mestres
+$(Include=$(vPastaRaiz)/1.Extracao/Stage/Parametros/E_Parametros.qvs);
+$(Include=$(vPastaRaiz)/1.Extracao/Stage/Arquivos Gerais/E_Biblioteca_Tratamentos.qvs);
+$(Include=$(vPastaRaiz)/1.Extracao/Stage/Script/E_ScriptExtracao.qvs);
+$(Include=$(vPastaRaiz)/1.Extracao/Stage/Script/E_ScriptConversao.qvs);
